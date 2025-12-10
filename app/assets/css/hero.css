@@ -52,9 +52,35 @@
 
 .rules-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(4, 1fr);
   gap: 2rem;
   margin-bottom: 2rem;
+}
+
+@media (max-width: 1024px) {
+  .rules-grid {
+    grid-template-columns: repeat(4, minmax(200px, 1fr));
+    overflow-x: auto;
+    padding-bottom: 1rem;
+  }
+
+  .rules-grid::-webkit-scrollbar {
+    height: 8px;
+  }
+
+  .rules-grid::-webkit-scrollbar-track {
+    background: rgba(78, 204, 163, 0.1);
+    border-radius: 4px;
+  }
+
+  .rules-grid::-webkit-scrollbar-thumb {
+    background: rgba(78, 204, 163, 0.5);
+    border-radius: 4px;
+  }
+
+  .rules-grid::-webkit-scrollbar-thumb:hover {
+    background: rgba(78, 204, 163, 0.7);
+  }
 }
 
 .rule-card {
@@ -62,6 +88,21 @@
   background: linear-gradient(135deg, rgba(26, 38, 62, 0.9) 0%, rgba(20, 30, 50, 0.95) 100%);
   border: 2px solid rgba(78, 204, 163, 0.4);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.rule-card :deep(> div) {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.rule-card :deep(> div > div:last-child) {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
 }
 
 .rule-card:hover {
@@ -94,6 +135,7 @@
   line-height: 1.7;
   font-size: 0.95rem;
   text-align: center;
+  flex-grow: 1;
 }
 
 .image-placeholder {
@@ -101,7 +143,7 @@
   border: 2px dashed rgba(78, 204, 163, 0.4);
   border-radius: 0.5rem;
   padding: 3rem 1rem;
-  margin-top: 1rem;
+  margin-top: auto;
   text-align: center;
   transition: border-color 0.3s ease, background 0.3s ease;
 }
@@ -244,10 +286,6 @@
 
   .cta-title {
     font-size: 2rem;
-  }
-
-  .rules-grid {
-    grid-template-columns: 1fr;
   }
 
   .hero-section {
