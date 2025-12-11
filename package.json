@@ -8,14 +8,28 @@
     "dev-server": "nuxt dev --port 37498 --host 0.0.0.0",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare && prisma generate",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:migrate:prod": "prisma migrate deploy",
+    "prisma:studio": "prisma studio",
+    "prisma:reset": "prisma migrate reset"
   },
   "dependencies": {
     "@nuxt/ui": "^4.2.1",
+    "@prisma/adapter-pg": "^7.1.0",
+    "@prisma/client": "^7.1.0",
     "@vueuse/nuxt": "^14.1.0",
+    "arangojs": "^10.1.2",
+    "dotenv": "^17.2.3",
     "nuxt": "^4.2.1",
+    "pg": "^8.16.3",
+    "prisma": "^7.1.0",
     "typescript": "^5.9.3",
     "vue": "^3.5.25",
     "vue-router": "^4.6.3"
+  },
+  "devDependencies": {
+    "@types/pg": "^8.16.0"
   }
 }

@@ -1,0 +1,53 @@
+// Prisma schema file for PostgreSQL
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// Example model - adapt to your needs
+model User {
+  id             String          @id @default(cuid())
+  email          String          @unique
+  username       String          @unique
+  name           String?
+  surname        String?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
+  // Relation to Authentication
+  authentication Authentication?
+
+  @@map("users")
+}
+
+model Authentication {
+  id        String   @id @default(cuid())
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Foreign key to User
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("authentications")
+}
+
+model Lithos {
+  id         String   @id @default(cuid())
+  name       String   @unique
+  sprite     String
+  spikeLeft  Int
+  spikeRight Int
+  spikeUp    Int
+  spikeDown  Int
+  type       String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@map("lithos")
+}

@@ -3,5 +3,8 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
   modules: ['@nuxt/ui', '@vueuse/nuxt'],
-  css: ['~/assets/css/global.css']
+  css: ['~/assets/css/global.css'],
+  dir: {
+    server: 'server'
+  }
 })
