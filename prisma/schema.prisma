@@ -22,8 +22,8 @@ model User {
   authentication Authentication?
 
   // Relation to Role
-  roleId String?
-  role   Role?   @relation(fields: [roleId], references: [id])
+  roleId String
+  role   Role   @relation(fields: [roleId], references: [id])
 
   @@map("users")
 }
