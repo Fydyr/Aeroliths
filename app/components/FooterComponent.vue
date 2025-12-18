@@ -4,7 +4,7 @@
       <div class="footer-content">
         <p>{{ SITE_INFO.copyright }}</p>
         <div class="footer-links">
-          <a href="/legal">Legal</a>
+          <NuxtLink href="/legal">Legal</NuxtLink>
           <a :href="SITE_INFO.discord.url" target="_blank" rel="noopener noreferrer" class="discord-link">
             <UIcon name="i-simple-icons-discord" class="discord-icon" />
             Discord
