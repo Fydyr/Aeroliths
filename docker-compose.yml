@@ -1,0 +1,77 @@
+services:
+  database:
+    image: postgres:16-alpine
+    container_name: ${NAME}_pg
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: "${POSTGRES_DB}"
+      POSTGRES_USER: "${POSTGRES_USER}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+    networks:
+      - lan
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  adminer:
+    image: adminer
+    container_name: ${NAME}_adminer
+    restart: unless-stopped
+    environment:
+      ADMINER_DEFAULT_SERVER: ${NAME}_pg
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.adminer_${NAME}.entrypoints=websecure
+      - traefik.http.routers.adminer_${NAME}.rule=Host(`${NAME}.jrcan.dev`) && PathPrefix(`/adminer`)
+      - traefik.http.middlewares.adminerstrip_${NAME}.stripprefix.prefixes=/adminer
+      - traefik.http.routers.adminer_${NAME}.middlewares=adminerstrip_${NAME}@docker
+      - traefik.http.routers.adminer_${NAME}.tls=true
+      - traefik.http.routers.adminer_${NAME}.tls.certresolver=myresolver
+    networks:
+      - web
+      - lan
+    depends_on:
+      database:
+        condition: service_healthy
+
+  app:
+    container_name: ${NAME}
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${NAME}_pg:5432/${POSTGRES_DB}?schema=public"
+      ARANGO_URL: "${ARANGO_URL}"
+      ARANGO_DB: "${ARANGO_DB}"
+      ARANGO_USER: "${ARANGO_USER}"
+      ARANGO_PASSWORD: "${ARANGO_PASSWORD}"
+    networks:
+      - lan
+      - web
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.${NAME}.entrypoints=websecure
+      - traefik.http.services.${NAME}.loadbalancer.server.port=3000
+      - traefik.http.routers.${NAME}.rule=Host(`${NAME}.jrcan.dev`)
+      - traefik.http.routers.${NAME}.tls=true
+      - traefik.http.routers.${NAME}.tls.certresolver=myresolver
+    depends_on:
+      database:
+        condition: service_healthy
+
+volumes:
+  postgres-data:
+
+networks:
+  web:
+    external: true
+  lan:
+    external: false
+    name: lan_${NAME}
+
