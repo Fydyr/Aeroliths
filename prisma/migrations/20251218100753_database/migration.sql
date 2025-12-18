@@ -47,6 +47,18 @@ CREATE TABLE "roles" (
     CONSTRAINT "roles_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "collections" (
+    "id" TEXT NOT NULL,
+    "quantity" INTEGER NOT NULL DEFAULT 0,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "userId" TEXT NOT NULL,
+    "lithosId" TEXT NOT NULL,
+
+    CONSTRAINT "collections_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
 
@@ -62,8 +74,17 @@ CREATE UNIQUE INDEX "lithos_name_key" ON "lithos"("name");
 -- CreateIndex
 CREATE UNIQUE INDEX "roles_name_key" ON "roles"("name");
 
+-- CreateIndex
+CREATE UNIQUE INDEX "collections_userId_lithosId_key" ON "collections"("userId", "lithosId");
+
 -- AddForeignKey
 ALTER TABLE "users" ADD CONSTRAINT "users_roleId_fkey" FOREIGN KEY ("roleId") REFERENCES "roles"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "authentications" ADD CONSTRAINT "authentications_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "collections" ADD CONSTRAINT "collections_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "collections" ADD CONSTRAINT "collections_lithosId_fkey" FOREIGN KEY ("lithosId") REFERENCES "lithos"("id") ON DELETE CASCADE ON UPDATE CASCADE;

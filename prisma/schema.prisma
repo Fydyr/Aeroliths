@@ -8,7 +8,6 @@ datasource db {
   provider = "postgresql"
 }
 
-// Example model - adapt to your needs
 model User {
   id        String   @id @default(cuid())
   email     String   @unique
@@ -18,12 +17,11 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  // Relation to Authentication
+  // Relations
   authentication Authentication?
-
-  // Relation to Role
-  roleId String
-  role   Role   @relation(fields: [roleId], references: [id])
+  role           Role             @relation(fields: [roleId], references: [id])
+  roleId         String
+  collections    Collections[]
 
   @@map("users")
 }
@@ -53,6 +51,9 @@ model Lithos {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
+  // Relations
+  collections Collections[]
+
   @@map("lithos")
 }
 
@@ -60,8 +61,25 @@ model Role {
   id   String @id @default(cuid())
   name String @unique
 
-  // Relation to Users
+  // Relations
   users User[]
 
   @@map("roles")
+}
+
+model Collections {
+  id        String   @id @default(cuid())
+  quantity  Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Foreign keys
+  userId   String
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lithosId String
+  lithos   Lithos @relation(fields: [lithosId], references: [id], onDelete: Cascade)
+
+  // A user can only have one entry per Lithos
+  @@unique([userId, lithosId])
+  @@map("collections")
 }
