@@ -17,6 +17,23 @@ services:
       timeout: 5s
       retries: 5
 
+  arangodb:
+    image: arangodb:latest
+    container_name: ${NAME}_arango
+    restart: unless-stopped
+    environment:
+      ARANGO_ROOT_PASSWORD: "${ARANGO_PASSWORD}"
+    networks:
+      - lan
+    volumes:
+      - arangodb-data:/var/lib/arangodb3
+      - arangodb-apps:/var/lib/arangodb3-apps
+    healthcheck:
+      test: ["CMD-SHELL", "wget --spider --quiet http://localhost:8529/_api/version || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   adminer:
     image: adminer
     container_name: ${NAME}_adminer
@@ -47,10 +64,11 @@ services:
     environment:
       NODE_ENV: production
       DATABASE_URL: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${NAME}_pg:5432/${POSTGRES_DB}?schema=public"
-      ARANGO_URL: "${ARANGO_URL}"
+      ARANGO_URL: "http://${NAME}_arango:8529"
       ARANGO_DB: "${ARANGO_DB}"
       ARANGO_USER: "${ARANGO_USER}"
       ARANGO_PASSWORD: "${ARANGO_PASSWORD}"
+      DISCORD_WEBHOOK_URL: "${DISCORD_WEBHOOK_URL}"
     networks:
       - lan
       - web
@@ -64,9 +82,13 @@ services:
     depends_on:
       database:
         condition: service_healthy
+      arangodb:
+        condition: service_healthy
 
 volumes:
   postgres-data:
+  arangodb-data:
+  arangodb-apps:
 
 networks:
   web:
