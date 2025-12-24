@@ -9,20 +9,15 @@ WORKDIR /app
 COPY package*.json ./
 COPY prisma ./prisma/
 
-# Installer les dépendances
-RUN npm ci --only=production
+# Installer TOUTES les dépendances (dev incluses pour le build)
+RUN npm install --no-package-lock
 
 # Copier le reste du code
 COPY . .
 
-# Générer le client Prisma
+# Générer le client Prisma (DATABASE_URL temporaire nécessaire pour la génération)
+ENV DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy?schema=public"
 RUN npm run prisma:generate
-
-# Exécuter les migrations Prisma en production
-RUN npm run prisma:migrate:prod
-
-# Seed de la base de données
-RUN npm run prisma:seed
 
 # Build de l'application Nuxt
 RUN npm run build
