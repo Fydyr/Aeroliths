@@ -2,7 +2,6 @@
 export default defineEventHandler(async (event) => {
   try {
     const users = await db.postgres.user.findMany({
-      take: 10,
       orderBy: {
         createdAt: 'desc',
       },
@@ -11,6 +10,7 @@ export default defineEventHandler(async (event) => {
     return {
       success: true,
       data: users,
+      count: users.length,
     }
   } catch (error) {
     console.error('Error fetching users:', error)
