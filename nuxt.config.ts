@@ -14,5 +14,12 @@ export default defineNuxtConfig({
     server: {
       allowedHosts: ['kinator.fr']
     }
-  }
+  },
+  // Exclude test files from Nuxt
+  ignore: [
+    '**/*.test.ts',
+    '**/*.spec.ts',
+    '**/tests/**',
+    '**/vitest.config.ts'
+  ]
 })
