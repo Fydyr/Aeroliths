@@ -1,0 +1,123 @@
+.settings-container {
+  min-height: 100vh;
+  padding: 2rem 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.settings-card {
+  width: 100%;
+  max-width: 600px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  margin-top: 2rem;
+}
+
+.settings-card h1 {
+  margin: 0 0 1.5rem 0;
+  color: #333;
+  font-size: 1.8rem;
+}
+
+.settings-card h2 {
+  margin: 2rem 0 1rem 0;
+  color: #333;
+  font-size: 1.4rem;
+  padding-top: 2rem;
+  border-top: 1px solid #eee;
+}
+
+.settings-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  font-weight: 500;
+  color: #555;
+  font-size: 0.9rem;
+}
+
+.form-group input {
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+  transition: border-color 0.3s;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #4CAF50;
+}
+
+.form-group input:disabled {
+  background-color: #f5f5f5;
+  cursor: not-allowed;
+}
+
+.error-message {
+  padding: 0.75rem;
+  background-color: #fee;
+  color: #c33;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.success-message {
+  padding: 0.75rem;
+  background-color: #efe;
+  color: #3c3;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.submit-btn {
+  padding: 0.75rem 1.5rem;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-top: 0.5rem;
+}
+
+.submit-btn:hover:not(:disabled) {
+  background-color: #45a049;
+}
+
+.submit-btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.password-section {
+  margin-top: 1rem;
+}
+
+@media (max-width: 600px) {
+  .settings-card {
+    padding: 1.5rem;
+  }
+
+  .settings-card h1 {
+    font-size: 1.5rem;
+  }
+
+  .settings-card h2 {
+    font-size: 1.2rem;
+  }
+}

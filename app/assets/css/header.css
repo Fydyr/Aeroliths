@@ -75,6 +75,13 @@
   color: #4ecca3;
   font-weight: 600;
   font-size: 0.95rem;
+  text-decoration: none;
+  cursor: pointer;
+  transition: opacity 0.3s;
+}
+
+.username:hover {
+  opacity: 0.8;
 }
 
 .logout-btn {

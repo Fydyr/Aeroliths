@@ -23,7 +23,9 @@
 
           <!-- User menu -->
           <div class="user-menu">
-            <span class="username">{{ user?.username }}</span>
+            <NuxtLink href="/settings" class="username" @click="mobileMenuOpen = false">
+              {{ user?.username }}
+            </NuxtLink>
             <button @click="handleLogout" class="logout-btn">Logout</button>
           </div>
         </template>
