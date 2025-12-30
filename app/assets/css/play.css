@@ -1,0 +1,27 @@
+.play-page {
+  min-height: calc(100vh - 80px);
+  padding: 2rem;
+  background: linear-gradient(rgba(22, 33, 62, 0.95), rgba(22, 33, 62, 0.95));
+  background-color: #16213e;
+}
+
+.play-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+}
+
+.play-container h1 {
+  color: #fff;
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.play-container p {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1.1rem;
+}

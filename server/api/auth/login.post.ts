@@ -5,21 +5,8 @@ import type { SignOptions } from 'jsonwebtoken'
 // API route to authenticate user and return JWT token
 export default defineEventHandler(async (event) => {
   try {
-    let body = await readBody(event)
-
-    // Parse JSON if body is a string
-    if (typeof body === 'string') {
-      try {
-        body = JSON.parse(body)
-      } catch (e) {
-        throw createError({
-          statusCode: 400,
-          message: 'Invalid JSON format',
-        })
-      }
-    }
-
-    const { email, password } = body
+    const body = await readBody(event)
+    const { email, password } = body || {}
 
     // Validate required fields
     if (!email || !password) {

@@ -10,6 +10,10 @@ export default defineNuxtConfig({
     // Optional: ensures build assets are also found here
     buildAssetsDir: '/_nuxt/'
   },
+  icon: {
+    provider: 'iconify',
+    serverBundle: false
+  },
   vite: {
     server: {
       allowedHosts: ['kinator.fr']
