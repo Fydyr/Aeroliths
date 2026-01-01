@@ -14,14 +14,14 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     try {
       await initAuth()
     } catch (error) {
-      // If token is invalid, clear it and continue to redirect
+      // If token is invalid, clear it
       console.error('Auth initialization failed:', error)
       localStorage.removeItem('auth_token')
     }
   }
 
-  // If not authenticated, redirect to login
-  if (!isAuthenticated.value) {
-    return navigateTo('/login')
+  // If authenticated, redirect to home or play page
+  if (isAuthenticated.value) {
+    return navigateTo('/play')
   }
 })

@@ -21,6 +21,11 @@
           <NuxtLink href="/rules" @click="mobileMenuOpen = false">Rules</NuxtLink>
           <NuxtLink href="/leaderboard" @click="mobileMenuOpen = false">Leaderboard</NuxtLink>
 
+          <!-- Admin link - only visible for admin users -->
+          <NuxtLink v-if="user?.role?.name === 'admin'" href="/admin" @click="mobileMenuOpen = false" class="admin-link">
+            Admin
+          </NuxtLink>
+
           <!-- User menu -->
           <div class="user-menu">
             <NuxtLink href="/settings" class="username" @click="mobileMenuOpen = false">

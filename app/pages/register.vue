@@ -108,7 +108,8 @@ import { ref } from 'vue'
 import { useAuth } from '~/composables/useAuth'
 
 definePageMeta({
-  layout: 'default'
+  layout: 'default',
+  middleware: 'guest'
 })
 
 const { register, isLoading, isAuthenticated } = useAuth()
@@ -123,13 +124,6 @@ const formData = ref({
 
 const confirmPassword = ref('')
 const errorMessage = ref('')
-
-// Redirect if already authenticated
-onMounted(() => {
-  if (isAuthenticated.value) {
-    navigateTo('/')
-  }
-})
 
 const handleRegister = async () => {
   errorMessage.value = ''
