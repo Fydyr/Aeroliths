@@ -32,6 +32,17 @@
       <div v-if="activeTab === 'users'" class="tab-content">
         <h2>User Management</h2>
 
+        <!-- Search Bar -->
+        <div class="search-bar">
+          <input
+            v-model="userSearchQuery"
+            type="text"
+            placeholder="Search users by username, email, or name..."
+            class="search-input"
+          />
+          <span class="search-icon">🔍</span>
+        </div>
+
         <!-- Loading State -->
         <div v-if="usersLoading" class="loading">Loading users...</div>
 
@@ -42,7 +53,7 @@
         <div v-if="usersSuccess" class="success-message">{{ usersSuccess }}</div>
 
         <!-- Users Table -->
-        <div v-if="!usersLoading && users.length > 0" class="users-table">
+        <div v-if="!usersLoading && filteredUsers.length > 0" class="users-table">
           <table>
             <thead>
               <tr>
@@ -55,7 +66,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="userItem in users" :key="userItem.id">
+              <tr v-for="userItem in filteredUsers" :key="userItem.id">
                 <td>{{ userItem.username }}</td>
                 <td>{{ userItem.email }}</td>
                 <td>{{ userItem.name || '-' }} {{ userItem.surname || '' }}</td>
@@ -75,7 +86,7 @@
                     Edit
                   </button>
                   <button
-                    v-if="userItem.id !== user?.id && userItem.role.name !== 'admin'"
+                    v-if="userItem.id !== user?.id"
                     @click="toggleUserRole(userItem)"
                     class="btn-role"
                     :disabled="actionLoading"
@@ -83,7 +94,7 @@
                     {{ userItem.role.name === 'user' ? 'Make Admin' : 'Remove Admin' }}
                   </button>
                   <button
-                    v-if="userItem.id !== user?.id && userItem.role.name !== 'admin'"
+                    v-if="userItem.id !== user?.id"
                     @click="deleteUser(userItem)"
                     class="btn-delete"
                     :disabled="actionLoading"
@@ -97,8 +108,11 @@
         </div>
 
         <!-- No Users -->
-        <div v-if="!usersLoading && users.length === 0" class="no-data">
+        <div v-if="!usersLoading && filteredUsers.length === 0 && userSearchQuery === ''" class="no-data">
           No users found.
+        </div>
+        <div v-if="!usersLoading && filteredUsers.length === 0 && userSearchQuery !== ''" class="no-data">
+          No users match your search.
         </div>
       </div>
 
@@ -106,9 +120,22 @@
       <div v-if="activeTab === 'lithos'" class="tab-content">
         <h2>Lithos Management</h2>
 
-        <button @click="openCreateLithosModal" class="btn-create">
-          Create New Lithos
-        </button>
+        <div class="lithos-header">
+          <button @click="openCreateLithosModal" class="btn-create">
+            Create New Lithos
+          </button>
+
+          <!-- Search Bar -->
+          <div class="search-bar">
+            <input
+              v-model="lithosSearchQuery"
+              type="text"
+              placeholder="Search lithos by name or type..."
+              class="search-input"
+            />
+            <span class="search-icon">🔍</span>
+          </div>
+        </div>
 
         <!-- Loading State -->
         <div v-if="lithosLoading" class="loading">Loading lithos...</div>
@@ -120,8 +147,8 @@
         <div v-if="lithosSuccess" class="success-message">{{ lithosSuccess }}</div>
 
         <!-- Lithos Grid -->
-        <div v-if="!lithosLoading && lithosList.length > 0" class="lithos-grid">
-          <div v-for="lithos in lithosList" :key="lithos.id" class="lithos-card">
+        <div v-if="!lithosLoading && filteredLithos.length > 0" class="lithos-grid">
+          <div v-for="lithos in filteredLithos" :key="lithos.id" class="lithos-card">
             <div class="lithos-sprite">
               <img :src="lithos.sprite" :alt="lithos.name" />
             </div>
@@ -153,8 +180,11 @@
         </div>
 
         <!-- No Lithos -->
-        <div v-if="!lithosLoading && lithosList.length === 0" class="no-data">
+        <div v-if="!lithosLoading && filteredLithos.length === 0 && lithosSearchQuery === ''" class="no-data">
           No lithos found.
+        </div>
+        <div v-if="!lithosLoading && filteredLithos.length === 0 && lithosSearchQuery !== ''" class="no-data">
+          No lithos match your search.
         </div>
       </div>
     </div>
@@ -208,6 +238,27 @@
             </button>
           </div>
         </form>
+      </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div v-if="showConfirmModal" class="modal-overlay" @click="cancelConfirm">
+      <div class="modal modal-confirm" @click.stop>
+        <h3>{{ confirmTitle }}</h3>
+        <p>{{ confirmMessage }}</p>
+        <div class="modal-actions">
+          <button type="button" @click="cancelConfirm" :disabled="confirmLoading">
+            Cancel
+          </button>
+          <button
+            type="button"
+            @click="confirmAction"
+            :disabled="confirmLoading"
+            :class="confirmDanger ? 'btn-danger' : ''"
+          >
+            {{ confirmLoading ? 'Processing...' : confirmButtonText }}
+          </button>
+        </div>
       </div>
     </div>
 
@@ -317,6 +368,41 @@ const { user, token, initAuth } = useAuth()
 // Check if user is admin
 const isAdmin = computed(() => user.value?.role?.name === 'admin')
 
+// Filtered users based on search query
+const filteredUsers = computed(() => {
+  if (!userSearchQuery.value) return users.value
+
+  const query = userSearchQuery.value.toLowerCase()
+  return users.value.filter((userItem) => {
+    const username = userItem.username?.toLowerCase() || ''
+    const email = userItem.email?.toLowerCase() || ''
+    const name = userItem.name?.toLowerCase() || ''
+    const surname = userItem.surname?.toLowerCase() || ''
+    const fullName = `${name} ${surname}`.trim()
+
+    return (
+      username.includes(query) ||
+      email.includes(query) ||
+      name.includes(query) ||
+      surname.includes(query) ||
+      fullName.includes(query)
+    )
+  })
+})
+
+// Filtered lithos based on search query
+const filteredLithos = computed(() => {
+  if (!lithosSearchQuery.value) return lithosList.value
+
+  const query = lithosSearchQuery.value.toLowerCase()
+  return lithosList.value.filter((lithos) => {
+    const name = lithos.name?.toLowerCase() || ''
+    const type = lithos.type?.toLowerCase() || ''
+
+    return name.includes(query) || type.includes(query)
+  })
+})
+
 // Helper function to get auth headers
 const getAuthHeaders = (): Record<string, string> => {
   if (!token.value) return {}
@@ -333,15 +419,26 @@ const users = ref<any[]>([])
 const usersLoading = ref(false)
 const usersError = ref('')
 const usersSuccess = ref('')
+const userSearchQuery = ref('')
 
 // Lithos management
 const lithosList = ref<any[]>([])
 const lithosLoading = ref(false)
 const lithosError = ref('')
 const lithosSuccess = ref('')
+const lithosSearchQuery = ref('')
 
 // Action loading
 const actionLoading = ref(false)
+
+// Confirmation modal
+const showConfirmModal = ref(false)
+const confirmTitle = ref('')
+const confirmMessage = ref('')
+const confirmButtonText = ref('Confirm')
+const confirmDanger = ref(false)
+const confirmLoading = ref(false)
+const confirmCallback = ref<(() => Promise<void>) | null>(null)
 
 // Edit user modal
 const showEditUserModal = ref(false)
@@ -368,6 +465,45 @@ const lithosForm = ref({
   spikeLeft: 0,
 })
 const uploadingSprite = ref(false)
+
+// Open confirmation modal
+const openConfirmModal = (
+  title: string,
+  message: string,
+  callback: () => Promise<void>,
+  buttonText: string = 'Confirm',
+  danger: boolean = false
+) => {
+  confirmTitle.value = title
+  confirmMessage.value = message
+  confirmButtonText.value = buttonText
+  confirmDanger.value = danger
+  confirmCallback.value = callback
+  showConfirmModal.value = true
+}
+
+// Cancel confirmation
+const cancelConfirm = () => {
+  showConfirmModal.value = false
+  confirmCallback.value = null
+  confirmLoading.value = false
+}
+
+// Confirm action
+const confirmAction = async () => {
+  if (!confirmCallback.value) return
+
+  confirmLoading.value = true
+  try {
+    await confirmCallback.value()
+    showConfirmModal.value = false
+    confirmCallback.value = null
+  } catch (error) {
+    // Error is handled in the callback
+  } finally {
+    confirmLoading.value = false
+  }
+}
 
 // Handle sprite image upload
 const handleSpriteUpload = async (event: Event) => {
@@ -493,55 +629,68 @@ const updateUser = async () => {
 }
 
 // Toggle user role
-const toggleUserRole = async (userItem: any) => {
-  if (!confirm(`Are you sure you want to ${userItem.role.name === 'user' ? 'promote' : 'demote'} ${userItem.username}?`)) {
-    return
-  }
+const toggleUserRole = (userItem: any) => {
+  const action = userItem.role.name === 'user' ? 'promote' : 'demote'
+  const actionText = userItem.role.name === 'user' ? 'Make Admin' : 'Remove Admin'
 
-  actionLoading.value = true
-  usersError.value = ''
+  openConfirmModal(
+    `${actionText}`,
+    `Are you sure you want to ${action} ${userItem.username}?`,
+    async () => {
+      actionLoading.value = true
+      usersError.value = ''
 
-  try {
-    const newRole = userItem.role.name === 'user' ? 'admin' : 'user'
-    await $fetch(`/api/admin/users/${userItem.id}/role`, {
-      method: 'PATCH',
-      headers: getAuthHeaders(),
-      body: { roleName: newRole },
-    })
+      try {
+        const newRole = userItem.role.name === 'user' ? 'admin' : 'user'
+        await $fetch(`/api/admin/users/${userItem.id}/role`, {
+          method: 'PATCH',
+          headers: getAuthHeaders(),
+          body: { roleName: newRole },
+        })
 
-    usersSuccess.value = `User role updated successfully`
-    await fetchUsers()
-    setTimeout(() => { usersSuccess.value = '' }, 3000)
-  } catch (error: any) {
-    usersError.value = error.data?.statusMessage || 'Failed to update user role'
-  } finally {
-    actionLoading.value = false
-  }
+        usersSuccess.value = `User role updated successfully`
+        await fetchUsers()
+        setTimeout(() => { usersSuccess.value = '' }, 3000)
+      } catch (error: any) {
+        usersError.value = error.data?.statusMessage || 'Failed to update user role'
+        throw error
+      } finally {
+        actionLoading.value = false
+      }
+    },
+    actionText,
+    false
+  )
 }
 
 // Delete user
-const deleteUser = async (userItem: any) => {
-  if (!confirm(`Are you sure you want to delete ${userItem.username}? This action cannot be undone.`)) {
-    return
-  }
+const deleteUser = (userItem: any) => {
+  openConfirmModal(
+    'Delete User',
+    `Are you sure you want to delete ${userItem.username}? This action cannot be undone.`,
+    async () => {
+      actionLoading.value = true
+      usersError.value = ''
 
-  actionLoading.value = true
-  usersError.value = ''
+      try {
+        await $fetch(`/api/admin/users/${userItem.id}`, {
+          method: 'DELETE',
+          headers: getAuthHeaders(),
+        })
 
-  try {
-    await $fetch(`/api/admin/users/${userItem.id}`, {
-      method: 'DELETE',
-      headers: getAuthHeaders(),
-    })
-
-    usersSuccess.value = `User ${userItem.username} deleted successfully`
-    await fetchUsers()
-    setTimeout(() => { usersSuccess.value = '' }, 3000)
-  } catch (error: any) {
-    usersError.value = error.data?.statusMessage || 'Failed to delete user'
-  } finally {
-    actionLoading.value = false
-  }
+        usersSuccess.value = `User ${userItem.username} deleted successfully`
+        await fetchUsers()
+        setTimeout(() => { usersSuccess.value = '' }, 3000)
+      } catch (error: any) {
+        usersError.value = error.data?.statusMessage || 'Failed to delete user'
+        throw error
+      } finally {
+        actionLoading.value = false
+      }
+    },
+    'Delete',
+    true
+  )
 }
 
 // Open create lithos modal
@@ -643,28 +792,33 @@ const saveLithos = async () => {
 }
 
 // Delete lithos
-const deleteLithos = async (lithos: any) => {
-  if (!confirm(`Are you sure you want to delete ${lithos.name}? This action cannot be undone.`)) {
-    return
-  }
+const deleteLithos = (lithos: any) => {
+  openConfirmModal(
+    'Delete Lithos',
+    `Are you sure you want to delete ${lithos.name}? This action cannot be undone.`,
+    async () => {
+      actionLoading.value = true
+      lithosError.value = ''
 
-  actionLoading.value = true
-  lithosError.value = ''
+      try {
+        await $fetch(`/api/admin/lithos/${lithos.id}`, {
+          method: 'DELETE',
+          headers: getAuthHeaders(),
+        })
 
-  try {
-    await $fetch(`/api/admin/lithos/${lithos.id}`, {
-      method: 'DELETE',
-      headers: getAuthHeaders(),
-    })
-
-    lithosSuccess.value = `Lithos ${lithos.name} deleted successfully`
-    await fetchLithos()
-    setTimeout(() => { lithosSuccess.value = '' }, 3000)
-  } catch (error: any) {
-    lithosError.value = error.data?.statusMessage || 'Failed to delete lithos'
-  } finally {
-    actionLoading.value = false
-  }
+        lithosSuccess.value = `Lithos ${lithos.name} deleted successfully`
+        await fetchLithos()
+        setTimeout(() => { lithosSuccess.value = '' }, 3000)
+      } catch (error: any) {
+        lithosError.value = error.data?.statusMessage || 'Failed to delete lithos'
+        throw error
+      } finally {
+        actionLoading.value = false
+      }
+    },
+    'Delete',
+    true
+  )
 }
 
 // Format date

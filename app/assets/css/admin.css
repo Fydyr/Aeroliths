@@ -387,3 +387,77 @@ td {
   text-align: center;
   font-size: 14px;
 }
+
+.modal-confirm {
+  max-width: 450px;
+}
+
+.modal-confirm h3 {
+  margin-bottom: 15px;
+  color: #2c3e50;
+  font-size: 20px;
+}
+
+.modal-confirm p {
+  color: #495057;
+  margin-bottom: 25px;
+  line-height: 1.6;
+}
+
+.btn-danger {
+  background: #e74c3c !important;
+}
+
+.btn-danger:hover:not(:disabled) {
+  background: #c0392b !important;
+}
+
+.search-bar {
+  position: relative;
+  margin-bottom: 25px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 12px 40px 12px 15px;
+  border: 1px solid #ced4da;
+  border-radius: 6px;
+  font-size: 15px;
+  box-sizing: border-box;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+.search-icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 18px;
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.lithos-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.lithos-header .search-bar {
+  flex: 1;
+  margin-bottom: 0;
+  max-width: 400px;
+}
+
+.lithos-header .btn-create {
+  margin-bottom: 0;
+  white-space: nowrap;
+}
