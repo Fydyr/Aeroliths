@@ -1,27 +1,31 @@
+/* =========================================
+   PLAY PAGE
+   ========================================= */
+
 .play-page {
   min-height: calc(100vh - 80px);
-  padding: 2rem;
-  background: linear-gradient(rgba(22, 33, 62, 0.95), rgba(22, 33, 62, 0.95));
-  background-color: #16213e;
+  padding: var(--spacing-xl);
+  background: linear-gradient(var(--overlay-base), var(--overlay-base));
+  background-color: var(--color-bg-base);
 }
 
 .play-container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 2rem;
-  background: rgba(255, 255, 255, 0.05);
+  padding: var(--spacing-xl);
+  background: var(--bg-glass-light);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 20px;
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-2xl);
 }
 
 .play-container h1 {
-  color: #fff;
-  font-size: 2rem;
-  margin-bottom: 1rem;
+  color: var(--color-text-primary);
+  font-size: var(--font-5xl);
+  margin-bottom: var(--spacing-md);
 }
 
 .play-container p {
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 1.1rem;
+  color: var(--color-text-muted);
+  font-size: var(--font-xl);
 }

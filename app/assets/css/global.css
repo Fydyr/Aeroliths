@@ -1,14 +1,27 @@
+/* =========================================
+   GLOBAL STYLES
+   ========================================= */
+
+/* Import design system variables */
+@import './variables.css';
+
+/* =========================================
+   RESET
+   ========================================= */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+/* =========================================
+   BASE LAYOUT
+   ========================================= */
 html,
 body {
   margin: 0;
   padding: 0;
-  background-color: #16213e;
+  background-color: var(--color-bg-base);
   min-height: 100vh;
 }
 
@@ -18,5 +31,5 @@ body {
 
 #__nuxt {
   min-height: 100vh;
-  background-color: #16213e;
+  background-color: var(--color-bg-base);
 }

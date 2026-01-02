@@ -1,19 +1,26 @@
+/* =========================================
+   HEADER
+   ========================================= */
+
 .header {
-  background-color: #1a1a2e;
-  color: #fff;
-  padding: 1rem 0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  padding: var(--spacing-md) 0;
+  box-shadow: var(--shadow-md);
 }
 
 .header-container {
   max-width: 100%;
   margin: 0 auto;
-  padding: 0 1.5rem;
+  padding: 0 var(--spacing-lg);
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
+/* =========================================
+   LOGO
+   ========================================= */
 .logo a {
   text-decoration: none;
   cursor: pointer;
@@ -21,78 +28,88 @@
 
 .logo h1 {
   margin: 0;
-  font-size: 1.8rem;
-  color: #4ecca3;
-  font-weight: bold;
-  transition: opacity 0.3s;
+  font-size: var(--font-4xl);
+  color: var(--color-brand-primary);
+  font-weight: var(--font-bold);
+  transition: opacity var(--transition-normal);
 }
 
 .logo a:hover h1 {
   opacity: 0.8;
 }
 
+/* =========================================
+   MOBILE MENU
+   ========================================= */
 .mobile-menu-btn {
   display: none;
   background: none;
   border: none;
-  color: #fff;
-  font-size: 1.5rem;
+  color: var(--color-text-primary);
+  font-size: var(--font-3xl);
   cursor: pointer;
-  padding: 0.5rem;
-  transition: color 0.3s;
+  padding: var(--spacing-xs);
+  transition: color var(--transition-normal);
 }
 
 .mobile-menu-btn:hover {
-  color: #4ecca3;
+  color: var(--color-brand-primary);
 }
 
+/* =========================================
+   NAVIGATION
+   ========================================= */
 .nav {
   display: flex;
-  gap: 2rem;
+  gap: var(--spacing-xl);
   align-items: center;
 }
 
 .nav a {
-  color: #fff;
+  color: var(--color-text-primary);
   text-decoration: none;
-  font-weight: 500;
-  transition: color 0.3s;
+  font-weight: var(--font-medium);
+  transition: color var(--transition-normal);
 }
 
 .nav a:hover {
-  color: #4ecca3;
+  color: var(--color-brand-primary);
 }
 
+/* Admin link special styling */
 .admin-link {
-  background: rgba(241, 196, 15, 0.1);
-  border: 1px solid rgba(241, 196, 15, 0.3);
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
-  font-weight: 600;
-  transition: all 0.3s;
+  background: var(--color-warning-bg);
+  border: 1px solid var(--color-warning-border);
+  padding: var(--spacing-xs) var(--spacing-md);
+  border-radius: var(--radius-sm);
+  font-weight: var(--font-semibold);
+  transition: var(--transition-all);
 }
 
 .admin-link:hover {
-  background: rgba(241, 196, 15, 0.2);
-  border-color: rgba(241, 196, 15, 0.5);
-  color: #f1c40f !important;
+  background: var(--color-warning-bg-hover);
+  border-color: var(--color-warning-border-hover);
+  color: var(--color-warning) !important;
 }
 
+/* =========================================
+   USER MENU
+   ========================================= */
 .user-menu {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  padding-left: 1rem;
-  border-left: 1px solid rgba(255, 255, 255, 0.2);
+  gap: var(--spacing-md);
+  padding-left: var(--spacing-md);
+  border-left: 1px solid var(--color-border-subtle);
 }
 
 .username {
-  color: #4ecca3;
-  font-weight: 600;
-  font-size: 0.95rem;
+  color: var(--color-brand-primary);
+  font-weight: var(--font-semibold);
+  font-size: var(--font-base);
   text-decoration: none;
   cursor: pointer;
-  transition: opacity 0.3s;
+  transition: opacity var(--transition-normal);
 }
 
 .username:hover {
@@ -100,31 +117,34 @@
 }
 
 .logout-btn {
-  background: rgba(239, 68, 68, 0.1);
-  border: 1px solid rgba(239, 68, 68, 0.3);
-  color: #fca5a5;
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
-  font-weight: 500;
+  background: var(--color-error-bg);
+  border: 1px solid var(--color-error-border);
+  color: var(--color-error-light);
+  padding: var(--spacing-xs) var(--spacing-md);
+  border-radius: var(--radius-sm);
+  font-weight: var(--font-medium);
   cursor: pointer;
-  transition: all 0.3s;
-  font-size: 0.9rem;
+  transition: var(--transition-all);
+  font-size: var(--font-sm);
 }
 
 .logout-btn:hover {
-  background: rgba(239, 68, 68, 0.2);
-  border-color: rgba(239, 68, 68, 0.5);
+  background: var(--color-error-bg-hover);
+  border-color: var(--color-error-border-hover);
 }
 
+/* =========================================
+   RESPONSIVE
+   ========================================= */
 @media (max-width: 768px) {
   .header-container {
-    padding: 0 1rem;
+    padding: 0 var(--spacing-md);
     flex-wrap: wrap;
     position: relative;
   }
 
   .logo h1 {
-    font-size: 1.5rem;
+    font-size: var(--font-3xl);
   }
 
   .mobile-menu-btn {
@@ -136,8 +156,8 @@
     width: 100%;
     flex-direction: column;
     gap: 0;
-    margin-top: 1rem;
-    background-color: #1a1a2e;
+    margin-top: var(--spacing-md);
+    background-color: var(--color-bg-primary);
   }
 
   .nav.nav-open {
@@ -145,8 +165,8 @@
   }
 
   .nav a {
-    padding: 1rem 0;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding: var(--spacing-md) 0;
+    border-top: 1px solid var(--color-border-light);
   }
 
   .nav a:first-child {
@@ -156,10 +176,10 @@
   .user-menu {
     width: 100%;
     flex-direction: column;
-    gap: 0.75rem;
-    padding: 1rem 0;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-md) 0;
     border-left: none;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 1px solid var(--color-border-light);
   }
 
   .logout-btn {

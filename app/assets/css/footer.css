@@ -1,14 +1,18 @@
+/* =========================================
+   FOOTER
+   ========================================= */
+
 .footer {
-  background-color: #0f0f1e;
-  color: #aaa;
-  padding: 2rem 0;
+  background-color: var(--color-bg-secondary);
+  color: var(--color-text-muted-alt);
+  padding: var(--spacing-xl) 0;
   margin-top: auto;
 }
 
 .footer-container {
   max-width: 100%;
   margin: 0 auto;
-  padding: 0 1.5rem;
+  padding: 0 var(--spacing-lg);
 }
 
 .footer-content {
@@ -16,68 +20,71 @@
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: var(--spacing-md);
 }
 
 .footer-content p {
   margin: 0;
-  font-size: 0.9rem;
+  font-size: var(--font-sm);
 }
 
 .footer-links {
   display: flex;
-  gap: 2rem;
+  gap: var(--spacing-xl);
   align-items: center;
 }
 
 .footer-links a {
-  color: #aaa;
+  color: var(--color-text-muted-alt);
   text-decoration: none;
-  font-size: 0.9rem;
-  transition: color 0.3s;
+  font-size: var(--font-sm);
+  transition: color var(--transition-normal);
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--spacing-xs);
 }
 
 .footer-links a:hover {
-  color: #4ecca3;
+  color: var(--color-brand-primary);
 }
 
 .discord-link {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--spacing-xs);
 }
 
 .discord-icon {
-  font-size: 1.2rem;
+  font-size: var(--font-xl);
   width: 1.2rem;
   height: 1.2rem;
 }
 
+/* =========================================
+   RESPONSIVE
+   ========================================= */
 @media (max-width: 768px) {
   .footer-container {
-    padding: 0 1rem;
+    padding: 0 var(--spacing-md);
   }
 
   .footer-content {
     flex-direction: column;
     text-align: center;
-    gap: 1.5rem;
+    gap: var(--spacing-lg);
   }
 
   .footer-content p {
-    font-size: 0.8rem;
+    font-size: var(--font-xs);
   }
 
   .footer-links {
-    gap: 1.5rem;
+    gap: var(--spacing-lg);
     flex-wrap: wrap;
     justify-content: center;
   }
 
   .footer-links a {
-    font-size: 0.85rem;
+    font-size: var(--font-sm);
   }
 }

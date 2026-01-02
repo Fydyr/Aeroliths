@@ -1,62 +1,72 @@
+/* =========================================
+   RULES PAGE
+   ========================================= */
+
 .rules-page {
   min-height: calc(100vh - 80px);
-  padding: 2rem;
-  background: linear-gradient(rgba(22, 33, 62, 0.95), rgba(22, 33, 62, 0.95));
-  background-color: #16213e;
+  padding: var(--spacing-xl);
+  background: linear-gradient(var(--overlay-base), var(--overlay-base));
+  background-color: var(--color-bg-base);
 }
 
 .rules-container {
   max-width: 900px;
   margin: 0 auto;
-  padding: 2rem;
-  background: rgba(255, 255, 255, 0.05);
+  padding: var(--spacing-xl);
+  background: var(--bg-glass-light);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 20px;
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-2xl);
 }
 
 .rules-container h1 {
-  color: #fff;
-  font-size: 2.5rem;
-  margin-bottom: 2rem;
+  color: var(--color-text-primary);
+  font-size: var(--font-6xl);
+  margin-bottom: var(--spacing-xl);
   text-align: center;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--gradient-brand);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
+/* =========================================
+   CONTENT
+   ========================================= */
 .rules-content {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: var(--spacing-xl);
 }
 
 .rules-content section {
-  padding: 1.5rem;
-  background: rgba(255, 255, 255, 0.03);
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  padding: var(--spacing-lg);
+  background: var(--bg-glass-lighter);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border-lighter);
 }
 
 .rules-content h2 {
-  color: #4ecca3;
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
+  color: var(--color-brand-primary);
+  font-size: var(--font-3xl);
+  margin-bottom: var(--spacing-md);
 }
 
 .rules-content p {
-  color: rgba(255, 255, 255, 0.8);
-  line-height: 1.6;
-  font-size: 1.05rem;
+  color: var(--color-text-highlight);
+  line-height: var(--line-height-normal);
+  font-size: var(--font-lg);
 }
 
+/* =========================================
+   RESPONSIVE
+   ========================================= */
 @media (max-width: 768px) {
   .rules-container h1 {
-    font-size: 2rem;
+    font-size: var(--font-5xl);
   }
 
   .rules-content h2 {
-    font-size: 1.25rem;
+    font-size: var(--font-2xl);
   }
 }
