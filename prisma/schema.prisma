@@ -53,6 +53,8 @@ model Lithos {
 
   // Relations
   collections Collections[]
+  element     Elements?   @relation(fields: [elementId], references: [id])
+  elementId   String?
 
   @@map("lithos")
 }
@@ -82,4 +84,53 @@ model Collections {
   // A user can only have one entry per Lithos
   @@unique([userId, lithosId])
   @@map("collections")
+}
+
+model Elements {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  sprite    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  lithos              Lithos[]
+  weaknessesFrom      WeaknessElements[] @relation("ElementWeaknesses")
+  weaknessesAgainst   WeaknessElements[] @relation("WeakAgainstElement")
+  strengthsFrom       StrengthElements[] @relation("ElementStrengths")
+  strengthsAgainst    StrengthElements[] @relation("StrongAgainstElement")
+
+  @@map("elements")
+}
+
+model WeaknessElements {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Foreign keys
+  elementId       String
+  element         Elements @relation("ElementWeaknesses", fields: [elementId], references: [id], onDelete: Cascade)
+  weakAgainstId   String
+  weakAgainst     Elements @relation("WeakAgainstElement", fields: [weakAgainstId], references: [id], onDelete: Cascade)
+
+  // An element can only have one weakness entry per other element
+  @@unique([elementId, weakAgainstId])
+  @@map("weakness_elements")
+}
+
+model StrengthElements {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Foreign keys
+  elementId         String
+  element           Elements @relation("ElementStrengths", fields: [elementId], references: [id], onDelete: Cascade)
+  strongAgainstId   String
+  strongAgainst     Elements @relation("StrongAgainstElement", fields: [strongAgainstId], references: [id], onDelete: Cascade)
+
+  // An element can only have one strength entry per other element
+  @@unique([elementId, strongAgainstId])
+  @@map("strength_elements")
 }
