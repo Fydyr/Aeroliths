@@ -43,8 +43,8 @@ export default defineEventHandler(async (event) => {
             updateData.sprite = body.sprite
         }
 
-        if (body.type !== undefined) {
-            updateData.type = body.type
+        if (body.rarity !== undefined) {
+            updateData.rarity = body.rarity
         }
 
         // Validate and add spike values if provided
@@ -90,6 +90,11 @@ export default defineEventHandler(async (event) => {
                 })
             }
             updateData.spikeDown = spikeDown
+        }
+
+        // Add elementId if provided (can be null to remove the element)
+        if (body.elementId !== undefined) {
+            updateData.elementId = body.elementId || null
         }
 
         // Check if there's anything to update

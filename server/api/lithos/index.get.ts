@@ -5,6 +5,9 @@ export default defineEventHandler(async (event) => {
       orderBy: {
         name: 'asc',
       },
+      include: {
+        element: true,
+      },
     })
 
     return {

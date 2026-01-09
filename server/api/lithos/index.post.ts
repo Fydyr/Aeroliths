@@ -11,10 +11,10 @@ export default defineEventHandler(async (event) => {
         const body = await readBody(event)
 
         // Validate required fields
-        if (!body.name || !body.sprite || !body.type) {
+        if (!body.name || !body.sprite || !body.rarity) {
             throw createError({
                 statusCode: 400,
-                statusMessage: 'Fields name, sprite and type are required'
+                statusMessage: 'Fields name, sprite and rarity are required'
             })
         }
 
@@ -31,17 +31,25 @@ export default defineEventHandler(async (event) => {
             })
         }
 
+        // Prepare data for creation
+        const data: any = {
+            name: body.name,
+            sprite: body.sprite,
+            spikeLeft,
+            spikeRight,
+            spikeUp,
+            spikeDown,
+            rarity: body.rarity
+        }
+
+        // Add elementId if provided (optional)
+        if (body.elementId) {
+            data.elementId = body.elementId
+        }
+
         // Create the lithos
         const lithos = await db.postgres.lithos.create({
-            data: {
-                name: body.name,
-                sprite: body.sprite,
-                spikeLeft,
-                spikeRight,
-                spikeUp,
-                spikeDown,
-                type: body.type
-            }
+            data
         })
 
         return {
