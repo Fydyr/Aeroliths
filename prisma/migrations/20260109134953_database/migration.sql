@@ -32,7 +32,7 @@ CREATE TABLE "lithos" (
     "spikeRight" INTEGER NOT NULL,
     "spikeUp" INTEGER NOT NULL,
     "spikeDown" INTEGER NOT NULL,
-    "type" TEXT,
+    "rarity" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "elementId" TEXT,

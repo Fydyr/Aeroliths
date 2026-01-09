@@ -68,6 +68,15 @@ export default defineEventHandler(async (event) => {
       signOptions
     )
 
+    // Set token in httpOnly cookie for secure authentication
+    setCookie(event, 'auth_token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 60 * 60 * 24 * 7, // 7 days
+      path: '/',
+    })
+
     // Remove sensitive data
     const { authentication, ...userWithoutAuth } = user
 

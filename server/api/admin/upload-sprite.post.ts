@@ -5,7 +5,7 @@ import { existsSync } from 'fs'
 // API route to upload sprite images (admin only)
 export default defineEventHandler(async (event) => {
   try {
-    // Verify user is authenticated
+    // Verify user is authenticated (checks both Authorization header and cookie)
     const user = getAuthUser(event)
 
     // Verify user has admin role

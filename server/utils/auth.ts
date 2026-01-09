@@ -32,29 +32,33 @@ export function verifyToken(token: string): JWTPayload {
 }
 
 /**
- * Extract and verify token from Authorization header
+ * Extract and verify token from Authorization header or cookie
  */
 export function getAuthUser(event: H3Event): JWTPayload {
+  // First try to get token from Authorization header
   const authHeader = getHeader(event, 'authorization')
 
-  if (!authHeader) {
-    throw createError({
-      statusCode: 401,
-      message: 'Authorization header is required',
-    })
+  if (authHeader) {
+    // Expected format: "Bearer <token>"
+    const [type, token] = authHeader.split(' ')
+
+    if (type === 'Bearer' && token) {
+      return verifyToken(token)
+    }
   }
 
-  // Expected format: "Bearer <token>"
-  const [type, token] = authHeader.split(' ')
+  // If no Authorization header, try to get token from cookie
+  const tokenFromCookie = getCookie(event, 'auth_token')
 
-  if (type !== 'Bearer' || !token) {
-    throw createError({
-      statusCode: 401,
-      message: 'Invalid authorization format. Expected: Bearer <token>',
-    })
+  if (tokenFromCookie) {
+    return verifyToken(tokenFromCookie)
   }
 
-  return verifyToken(token)
+  // No token found in header or cookie
+  throw createError({
+    statusCode: 401,
+    message: 'Authentication required',
+  })
 }
 
 /**

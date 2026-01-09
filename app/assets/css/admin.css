@@ -562,3 +562,190 @@ td {
   background: var(--color-white);
   padding: var(--spacing-sm);
 }
+
+.btn-remove-sprite {
+  padding: var(--spacing-xs) var(--spacing-md);
+  background: var(--color-danger);
+  color: var(--color-white);
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 13px;
+  transition: background var(--transition-fast);
+}
+
+.btn-remove-sprite:hover {
+  background: var(--color-danger-dark);
+}
+
+.upload-loading {
+  padding: var(--spacing-sm);
+  color: var(--color-info-dark);
+  background: var(--color-info);
+  border-radius: var(--radius-sm);
+  margin-top: var(--spacing-sm);
+  font-size: 13px;
+}
+
+/* =========================================
+   ELEMENT RELATIONS
+   ========================================= */
+.element-relations {
+  margin: var(--spacing-md) 0;
+  font-size: 13px;
+}
+
+.element-relations p {
+  margin: var(--spacing-xs) 0;
+  color: var(--color-text-secondary);
+}
+
+.element-weaknesses {
+  color: var(--color-danger);
+}
+
+.element-strengths {
+  color: var(--color-success);
+}
+
+.lithos-element {
+  margin: var(--spacing-xs) 0;
+  font-size: 13px;
+  color: var(--color-info-dark);
+  font-weight: 500;
+}
+
+/* =========================================
+   MODAL LARGE (for relations)
+   ========================================= */
+.modal-large {
+  max-width: 700px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.relations-section {
+  margin-bottom: var(--spacing-xl);
+  padding: var(--spacing-lg);
+  background: var(--color-card-bg);
+  border-radius: var(--radius-lg);
+}
+
+.relations-section h4 {
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-md);
+  font-size: 16px;
+}
+
+.relations-list {
+  margin-bottom: var(--spacing-md);
+  min-height: 60px;
+}
+
+.relation-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: var(--color-white);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--spacing-xs);
+}
+
+.relation-item span {
+  color: var(--color-text-primary);
+  font-weight: 500;
+}
+
+.btn-delete-small {
+  padding: 4px var(--spacing-sm);
+  background: var(--color-danger);
+  color: var(--color-white);
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 12px;
+  transition: background var(--transition-fast);
+}
+
+.btn-delete-small:hover {
+  background: var(--color-danger-dark);
+}
+
+.btn-delete-small:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.no-relations {
+  padding: var(--spacing-md);
+  text-align: center;
+  color: var(--color-text-muted);
+  font-style: italic;
+}
+
+.add-relation {
+  display: flex;
+  gap: var(--spacing-sm);
+  align-items: stretch;
+}
+
+.relation-select {
+  flex: 1;
+  padding: var(--spacing-sm);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  background: var(--color-white);
+  cursor: pointer;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.relation-select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-focus);
+}
+
+.btn-add {
+  padding: var(--spacing-sm) var(--spacing-lg);
+  background: var(--color-success);
+  color: var(--color-white);
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 14px;
+  white-space: nowrap;
+  transition: background var(--transition-fast);
+}
+
+.btn-add:hover {
+  background: var(--color-success-dark);
+}
+
+.btn-add:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* =========================================
+   SELECT DROPDOWN STYLES
+   ========================================= */
+.form-group select {
+  width: 100%;
+  padding: var(--spacing-sm);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  background: var(--color-white);
+  cursor: pointer;
+  box-sizing: border-box;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.form-group select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-focus);
+}
