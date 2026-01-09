@@ -47,7 +47,7 @@ model Lithos {
   spikeRight Int
   spikeUp    Int
   spikeDown  Int
-  type       String
+  type       String?
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
