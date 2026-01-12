@@ -101,6 +101,10 @@ export default defineEventHandler(async (event) => {
       updateData.surname = body.surname || null
     }
 
+    if (body.profilePicture !== undefined) {
+      updateData.profilePicture = body.profilePicture || null
+    }
+
     // Check if there's anything to update
     if (Object.keys(updateData).length === 0) {
       throw createError({

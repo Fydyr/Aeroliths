@@ -5,6 +5,7 @@ CREATE TABLE "users" (
     "username" TEXT NOT NULL,
     "name" TEXT,
     "surname" TEXT,
+    "profilePicture" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "roleId" TEXT NOT NULL,

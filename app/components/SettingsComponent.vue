@@ -4,6 +4,35 @@
       <h1>Account Settings</h1>
 
       <form @submit.prevent="handleSubmit" class="settings-form">
+        <!-- Profile Picture -->
+        <div class="form-group">
+          <label for="profile-picture">Profile Picture</label>
+          <div class="profile-picture-upload">
+            <div v-if="formData.profilePicture" class="profile-picture-preview">
+              <img :src="formData.profilePicture" alt="Profile picture" />
+              <button
+                type="button"
+                @click="removeProfilePicture"
+                class="remove-btn"
+                :disabled="loading"
+              >
+                Remove
+              </button>
+            </div>
+            <div v-else class="profile-picture-placeholder">
+              <span>No profile picture</span>
+            </div>
+            <input
+              id="profile-picture"
+              type="file"
+              accept="image/png,image/jpeg,image/jpg,image/gif,image/webp"
+              @change="handleProfilePictureUpload"
+              :disabled="loading || uploadingProfilePicture"
+            />
+            <span v-if="uploadingProfilePicture" class="uploading-text">Uploading...</span>
+          </div>
+        </div>
+
         <!-- Email -->
         <div class="form-group">
           <label for="email">Email</label>
@@ -121,7 +150,8 @@ const formData = ref({
   email: '',
   username: '',
   name: '',
-  surname: ''
+  surname: '',
+  profilePicture: ''
 })
 
 const passwordData = ref({
@@ -131,6 +161,7 @@ const passwordData = ref({
 
 const loading = ref(false)
 const passwordLoading = ref(false)
+const uploadingProfilePicture = ref(false)
 const error = ref('')
 const success = ref('')
 const passwordError = ref('')
@@ -144,10 +175,45 @@ onMounted(async () => {
       email: user.value.email || '',
       username: user.value.username || '',
       name: user.value.name || '',
-      surname: user.value.surname || ''
+      surname: user.value.surname || '',
+      profilePicture: user.value.profilePicture || ''
     }
   }
 })
+
+const handleProfilePictureUpload = async (event: Event) => {
+  const target = event.target as HTMLInputElement
+  const file = target.files?.[0]
+
+  if (!file) return
+
+  uploadingProfilePicture.value = true
+  error.value = ''
+
+  try {
+    const formDataUpload = new FormData()
+    formDataUpload.append('file', file)
+
+    const response = await $fetch<any>('/api/admin/upload-sprite?type=profile', {
+      method: 'POST',
+      body: formDataUpload,
+    })
+
+    formData.value.profilePicture = response.data.path
+  } catch (err: any) {
+    error.value = err.data?.statusMessage || err.message || 'Failed to upload profile picture'
+  } finally {
+    uploadingProfilePicture.value = false
+  }
+}
+
+const removeProfilePicture = () => {
+  formData.value.profilePicture = ''
+  const fileInput = document.getElementById('profile-picture') as HTMLInputElement
+  if (fileInput) {
+    fileInput.value = ''
+  }
+}
 
 const handleSubmit = async () => {
   if (!user.value) return
@@ -163,7 +229,8 @@ const handleSubmit = async () => {
         email: formData.value.email,
         username: formData.value.username,
         name: formData.value.name || null,
-        surname: formData.value.surname || null
+        surname: formData.value.surname || null,
+        profilePicture: formData.value.profilePicture || null
       }
     })
 

@@ -2,14 +2,29 @@ import { writeFile, mkdir } from 'fs/promises'
 import { join } from 'path'
 import { existsSync } from 'fs'
 
-// API route to upload sprite images (admin only)
+// API route to upload images (admin only for lithos/elements, authenticated for profile)
 export default defineEventHandler(async (event) => {
   try {
     // Verify user is authenticated (checks both Authorization header and cookie)
     const user = getAuthUser(event)
 
-    // Verify user has admin role
-    requireRole(user, ['admin'])
+    // Get the upload type from query parameter (lithos, elements, or profile)
+    const query = getQuery(event)
+    const uploadType = (query.type as string) || 'lithos'
+
+    // Validate upload type
+    const validTypes = ['lithos', 'elements', 'profile']
+    if (!validTypes.includes(uploadType)) {
+      throw createError({
+        statusCode: 400,
+        statusMessage: 'Invalid upload type. Must be: lithos, elements, or profile',
+      })
+    }
+
+    // Verify user has admin role for lithos and elements uploads
+    if (uploadType === 'lithos' || uploadType === 'elements') {
+      requireRole(user, ['admin'])
+    }
 
     // Get the uploaded file
     const form = await readMultipartFormData(event)
@@ -39,13 +54,20 @@ export default defineEventHandler(async (event) => {
       })
     }
 
+    // Determine the subdirectory based on upload type
+    const subDir = uploadType === 'lithos' ? 'lithos' :
+                   uploadType === 'elements' ? 'elements' :
+                   'profile_pictures'
+
     // Generate unique filename
     const timestamp = Date.now()
     const ext = file.filename.split('.').pop()
-    const filename = `sprite-${timestamp}.${ext}`
+    const filename = uploadType === 'profile'
+      ? `profile-${user.id}-${timestamp}.${ext}`
+      : `${uploadType}-${timestamp}.${ext}`
 
-    // Define the upload directory (public/sprites to be accessible from frontend)
-    const uploadDir = join(process.cwd(), 'public', 'sprites')
+    // Define the upload directory
+    const uploadDir = join(process.cwd(), 'public', subDir)
 
     // Create directory if it doesn't exist
     if (!existsSync(uploadDir)) {
@@ -57,11 +79,11 @@ export default defineEventHandler(async (event) => {
     await writeFile(filePath, file.data)
 
     // Return the public URL path
-    const publicPath = `/sprites/${filename}`
+    const publicPath = `/${subDir}/${filename}`
 
     return {
       success: true,
-      message: 'Sprite uploaded successfully',
+      message: `${uploadType.charAt(0).toUpperCase() + uploadType.slice(1)} image uploaded successfully`,
       data: {
         filename,
         path: publicPath,

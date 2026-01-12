@@ -281,6 +281,35 @@
       <div class="modal" @click.stop>
         <h3>Edit User</h3>
         <form @submit.prevent="updateUser">
+          <!-- Profile Picture -->
+          <div class="form-group">
+            <label for="edit-profile-picture">Profile Picture</label>
+            <div class="profile-picture-upload">
+              <div v-if="editUserForm.profilePicture" class="profile-picture-preview">
+                <img :src="editUserForm.profilePicture" alt="Profile picture" />
+                <button
+                  type="button"
+                  @click="removeUserProfilePicture"
+                  class="remove-btn"
+                  :disabled="modalLoading"
+                >
+                  Remove
+                </button>
+              </div>
+              <div v-else class="profile-picture-placeholder">
+                <span>No profile picture</span>
+              </div>
+              <input
+                id="edit-profile-picture"
+                type="file"
+                accept="image/png,image/jpeg,image/jpg,image/gif,image/webp"
+                @change="handleUserProfilePictureUpload"
+                :disabled="modalLoading || uploadingUserProfilePicture"
+              />
+              <span v-if="uploadingUserProfilePicture" class="uploading-text">Uploading...</span>
+            </div>
+          </div>
+
           <div class="form-group">
             <label for="edit-username">Username</label>
             <input
@@ -775,7 +804,9 @@ const editUserForm = ref({
   email: '',
   name: '',
   surname: '',
+  profilePicture: '',
 })
+const uploadingUserProfilePicture = ref(false)
 const modalLoading = ref(false)
 const modalError = ref('')
 
@@ -870,7 +901,7 @@ const handleElementSpriteUpload = async (event: Event) => {
     formData.append('file', file)
 
     // Use $fetch with FormData - Nuxt handles cookies automatically for same-origin requests
-    const response = await $fetch<any>('/api/admin/upload-sprite', {
+    const response = await $fetch<any>('/api/admin/upload-sprite?type=elements', {
       method: 'POST',
       body: formData,
     })
@@ -907,7 +938,7 @@ const handleSpriteUpload = async (event: Event) => {
     formData.append('file', file)
 
     // Use $fetch with FormData - Nuxt handles cookies automatically for same-origin requests
-    const response = await $fetch<any>('/api/admin/upload-sprite', {
+    const response = await $fetch<any>('/api/admin/upload-sprite?type=lithos', {
       method: 'POST',
       body: formData,
     })
@@ -984,6 +1015,7 @@ const openEditUserModal = (userItem: any) => {
     email: userItem.email,
     name: userItem.name || '',
     surname: userItem.surname || '',
+    profilePicture: userItem.profilePicture || '',
   }
   modalError.value = ''
   showEditUserModal.value = true
@@ -998,8 +1030,45 @@ const closeEditUserModal = () => {
     email: '',
     name: '',
     surname: '',
+    profilePicture: '',
   }
   modalError.value = ''
+}
+
+// Handle user profile picture upload (admin)
+const handleUserProfilePictureUpload = async (event: Event) => {
+  const target = event.target as HTMLInputElement
+  const file = target.files?.[0]
+
+  if (!file) return
+
+  uploadingUserProfilePicture.value = true
+  modalError.value = ''
+
+  try {
+    const formData = new FormData()
+    formData.append('file', file)
+
+    const response = await $fetch<any>('/api/admin/upload-sprite?type=profile', {
+      method: 'POST',
+      body: formData,
+    })
+
+    editUserForm.value.profilePicture = response.data.path
+  } catch (error: any) {
+    modalError.value = error.data?.statusMessage || error.message || 'Failed to upload profile picture'
+  } finally {
+    uploadingUserProfilePicture.value = false
+  }
+}
+
+// Remove user profile picture (admin)
+const removeUserProfilePicture = () => {
+  editUserForm.value.profilePicture = ''
+  const fileInput = document.getElementById('edit-profile-picture') as HTMLInputElement
+  if (fileInput) {
+    fileInput.value = ''
+  }
 }
 
 // Update user
@@ -1016,6 +1085,7 @@ const updateUser = async () => {
         email: editUserForm.value.email,
         name: editUserForm.value.name || null,
         surname: editUserForm.value.surname || null,
+        profilePicture: editUserForm.value.profilePicture || null,
       },
     })
 

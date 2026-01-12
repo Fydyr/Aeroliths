@@ -9,17 +9,18 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  username  String   @unique
-  name      String?
-  surname   String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id             String   @id @default(cuid())
+  email          String   @unique
+  username       String   @unique
+  name           String?
+  surname        String?
+  profilePicture String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 
   // Relations
   authentication Authentication?
-  role           Role             @relation(fields: [roleId], references: [id])
+  role           Role            @relation(fields: [roleId], references: [id])
   roleId         String
   collections    Collections[]
 
@@ -53,7 +54,7 @@ model Lithos {
 
   // Relations
   collections Collections[]
-  element     Elements?   @relation(fields: [elementId], references: [id])
+  element     Elements?     @relation(fields: [elementId], references: [id])
   elementId   String?
 
   @@map("lithos")
@@ -94,11 +95,11 @@ model Elements {
   updatedAt DateTime @updatedAt
 
   // Relations
-  lithos              Lithos[]
-  weaknessesFrom      WeaknessElements[] @relation("ElementWeaknesses")
-  weaknessesAgainst   WeaknessElements[] @relation("WeakAgainstElement")
-  strengthsFrom       StrengthElements[] @relation("ElementStrengths")
-  strengthsAgainst    StrengthElements[] @relation("StrongAgainstElement")
+  lithos            Lithos[]
+  weaknessesFrom    WeaknessElements[] @relation("ElementWeaknesses")
+  weaknessesAgainst WeaknessElements[] @relation("WeakAgainstElement")
+  strengthsFrom     StrengthElements[] @relation("ElementStrengths")
+  strengthsAgainst  StrengthElements[] @relation("StrongAgainstElement")
 
   @@map("elements")
 }
@@ -109,10 +110,10 @@ model WeaknessElements {
   updatedAt DateTime @updatedAt
 
   // Foreign keys
-  elementId       String
-  element         Elements @relation("ElementWeaknesses", fields: [elementId], references: [id], onDelete: Cascade)
-  weakAgainstId   String
-  weakAgainst     Elements @relation("WeakAgainstElement", fields: [weakAgainstId], references: [id], onDelete: Cascade)
+  elementId     String
+  element       Elements @relation("ElementWeaknesses", fields: [elementId], references: [id], onDelete: Cascade)
+  weakAgainstId String
+  weakAgainst   Elements @relation("WeakAgainstElement", fields: [weakAgainstId], references: [id], onDelete: Cascade)
 
   // An element can only have one weakness entry per other element
   @@unique([elementId, weakAgainstId])
@@ -125,10 +126,10 @@ model StrengthElements {
   updatedAt DateTime @updatedAt
 
   // Foreign keys
-  elementId         String
-  element           Elements @relation("ElementStrengths", fields: [elementId], references: [id], onDelete: Cascade)
-  strongAgainstId   String
-  strongAgainst     Elements @relation("StrongAgainstElement", fields: [strongAgainstId], references: [id], onDelete: Cascade)
+  elementId       String
+  element         Elements @relation("ElementStrengths", fields: [elementId], references: [id], onDelete: Cascade)
+  strongAgainstId String
+  strongAgainst   Elements @relation("StrongAgainstElement", fields: [strongAgainstId], references: [id], onDelete: Cascade)
 
   // An element can only have one strength entry per other element
   @@unique([elementId, strongAgainstId])

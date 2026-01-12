@@ -122,6 +122,68 @@
 }
 
 /* =========================================
+   PROFILE PICTURE UPLOAD
+   ========================================= */
+.profile-picture-upload {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.profile-picture-preview {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-sm);
+  border: 1px solid var(--color-border-inverted);
+  border-radius: var(--radius-xs);
+  background-color: var(--color-admin-light);
+}
+
+.profile-picture-preview img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+  border: 2px solid var(--color-border-inverted);
+}
+
+.profile-picture-placeholder {
+  padding: var(--spacing-md);
+  border: 2px dashed var(--color-border-inverted);
+  border-radius: var(--radius-xs);
+  text-align: center;
+  color: var(--color-text-inverted-secondary);
+  font-size: var(--font-sm);
+}
+
+.remove-btn {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background-color: var(--color-error);
+  color: var(--color-admin-white);
+  border: none;
+  border-radius: var(--radius-xs);
+  font-size: var(--font-sm);
+  cursor: pointer;
+  transition: background-color var(--transition-normal);
+}
+
+.remove-btn:hover:not(:disabled) {
+  background-color: var(--color-error-dark);
+}
+
+.remove-btn:disabled {
+  background-color: var(--color-disabled-bg-alt);
+  cursor: not-allowed;
+}
+
+.uploading-text {
+  color: var(--color-text-inverted-secondary);
+  font-size: var(--font-sm);
+  font-style: italic;
+}
+
+/* =========================================
    RESPONSIVE
    ========================================= */
 @media (max-width: 600px) {
