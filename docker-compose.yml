@@ -1,55 +1,4 @@
 services:
-  database:
-    image: postgres:16-alpine
-    container_name: ${NAME}_pg
-    restart: unless-stopped
-    environment:
-      POSTGRES_DB: "${POSTGRES_DB}"
-      POSTGRES_USER: "${POSTGRES_USER}"
-      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
-    networks:
-      - lan
-    volumes:
-      - postgres-data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-  arangodb:
-    image: arangodb:latest
-    container_name: ${NAME}_arango
-    restart: unless-stopped
-    environment:
-      ARANGO_ROOT_PASSWORD: "${ARANGO_PASSWORD}"
-    networks:
-      - lan
-    volumes:
-      - arangodb-data:/var/lib/arangodb3
-      - arangodb-apps:/var/lib/arangodb3-apps
-
-  adminer:
-    image: adminer
-    container_name: ${NAME}_adminer
-    restart: unless-stopped
-    environment:
-      ADMINER_DEFAULT_SERVER: ${NAME}_pg
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.adminer_${NAME}.entrypoints=websecure
-      - traefik.http.routers.adminer_${NAME}.rule=Host(`${NAME}.jrcan.dev`) && PathPrefix(`/adminer`)
-      - traefik.http.middlewares.adminerstrip_${NAME}.stripprefix.prefixes=/adminer
-      - traefik.http.routers.adminer_${NAME}.middlewares=adminerstrip_${NAME}@docker
-      - traefik.http.routers.adminer_${NAME}.tls=true
-      - traefik.http.routers.adminer_${NAME}.tls.certresolver=myresolver
-    networks:
-      - web
-      - lan
-    depends_on:
-      database:
-        condition: service_healthy
-
   app:
     container_name: ${NAME}
     build:
@@ -58,14 +7,13 @@ services:
     restart: unless-stopped
     environment:
       NODE_ENV: production
-      DATABASE_URL: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${NAME}_pg:5432/${POSTGRES_DB}?schema=public"
-      ARANGO_URL: "http://${NAME}_arango:8529"
+      DATABASE_URL: "${DATABASE_URL}"
+      ARANGO_URL: "${ARANGO_URL}"
       ARANGO_DB: "${ARANGO_DB}"
       ARANGO_USER: "${ARANGO_USER}"
       ARANGO_PASSWORD: "${ARANGO_PASSWORD}"
       DISCORD_WEBHOOK_URL: "${DISCORD_WEBHOOK_URL}"
     networks:
-      - lan
       - web
     labels:
       - traefik.enable=true
@@ -74,21 +22,8 @@ services:
       - traefik.http.routers.${NAME}.rule=Host(`${NAME}.jrcan.dev`)
       - traefik.http.routers.${NAME}.tls=true
       - traefik.http.routers.${NAME}.tls.certresolver=myresolver
-    depends_on:
-      database:
-        condition: service_healthy
-      arangodb:
-        condition: service_started
-
-volumes:
-  postgres-data:
-  arangodb-data:
-  arangodb-apps:
 
 networks:
   web:
     external: true
-  lan:
-    external: false
-    name: lan_${NAME}
 
