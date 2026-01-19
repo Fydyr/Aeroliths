@@ -16,7 +16,7 @@ export default defineNuxtConfig({
   },
   vite: {
     server: {
-      allowedHosts: ['kinator.fr']
+      allowedHosts: ['aeroliths.fr']
     }
   },
   // Exclude test files from Nuxt
